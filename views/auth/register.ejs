@@ -1,0 +1,44 @@
+<div class="container py-5">
+    <h1 class="text-center">Đăng ký</h1>
+    <form class="mx-auto" style="max-width: 400px;" method="POST">
+        <div class="mb-3">
+            <label for="exampleInputName" class="form-label">Full Name</label>
+            <input 
+                type="text" 
+                name="name" 
+                value="<%= req?.old?.name %>" 
+                placeholder="Tên của bạn..." 
+                class="form-control" 
+                id="exampleInputName" 
+                aria-describedby="nameHelp"
+            >
+            <span class="text-danger"><%= req?.errors?.name %></span>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input 
+            type="text" 
+            name="email" 
+            value="<%= req?.old?.email %>" 
+            placeholder="Email..." 
+            class="form-control" 
+            id="exampleInputEmail1" 
+            aria-describedby="emailHelp"
+            >
+            <span class="text-danger"><%= req?.errors?.email %></span>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input 
+            type="password" 
+            name="password" 
+            placeholder="Password..." 
+            class="form-control" 
+            id="exampleInputPassword1"
+            >
+            <span class="text-danger"><%= req?.errors?.password %></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng ký</button>
+        <div class="form-text pt-2">Bạn đã có tài khoản? <a href="/dang-nhap">Đăng nhập</a></div>
+    </form>
+  </div>

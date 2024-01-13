@@ -1,0 +1,36 @@
+<div class="container py-5">
+    <h1 class="text-center">Đăng nhập</h1>
+    <% if (req?.msg) { %>
+      <div class="alert alert-success mx-auto" style="max-width: 400px;"  role="alert">
+        <%= req?.msg %>
+      </div>
+    <% } %>
+    <form class="mx-auto" style="max-width: 400px;" method="POST">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email</label>
+        <input 
+          type="text" 
+          name="email" 
+          value="<%= req?.old?.email %>" 
+          placeholder="Email..." 
+          class="form-control" 
+          id="exampleInputEmail1" 
+          aria-describedby="emailHelp"
+        >
+        <span class="text-danger"><%= req?.errors?.email %></span>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="Password..." 
+          class="form-control" 
+          id="exampleInputPassword1"
+        >
+        <span class="text-danger"><%= req?.errors?.password %></span>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng nhập</button>
+      <div class="form-text pt-2">Bạn chưa có tài khoản? <a href="/dang-ky">Đăng ký</a></div>
+    </form>
+  </div>
