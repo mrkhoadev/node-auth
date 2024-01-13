@@ -21,7 +21,9 @@ module.exports = (req, res, next) => {
     req.errors = errors.length ? errors[0] : {};
     const old = req.flash("old");
     const msg = req.flash("msg");
+    const error = req.flash("error");
     req.old = old.length ? old[0] : {};
     req.msg = msg.length ? msg[0] : '';
+    req.error = error.length ? error[0] : '';
     next();
 }

@@ -1,10 +1,17 @@
 <div class="container py-5">
     <h1 class="text-center">Đăng nhập</h1>
-    <% if (req?.msg) { %>
-      <div class="alert alert-success mx-auto" style="max-width: 400px;"  role="alert">
-        <%= req?.msg %>
-      </div>
-    <% } %>
+    <div class="mx-auto" style="max-width: 400px;">
+      <% if (req?.msg) { %>
+        <div class="alert alert-success"  role="alert">
+          <%= req?.msg %>
+        </div>
+      <% } %>
+      <% if (req?.error) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= req?.error %>
+        </div>
+      <% } %>
+    </div>
     <form class="mx-auto" style="max-width: 400px;" method="POST">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email</label>

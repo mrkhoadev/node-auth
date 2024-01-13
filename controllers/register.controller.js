@@ -14,7 +14,6 @@ module.exports = {
                     .required("Email bắt buộc phải nhập")
                     .email("Email không đúng định dạng")
                     .test("check-emailRegister", "Email đã tồn tại", async (value) => {
-
                         const result = await User.findOne({ where: { email: value } });
                         return result ? false : true;
                     }),

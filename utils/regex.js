@@ -6,4 +6,4 @@ const emailRegex = (str) => {
 const htmlScript = (html) => {
     return html?.replace(/(<([^>]+)>)/gi, "").trim();
 };
-module.exports = { emailRegex, htmlScript }
+module.exports = { emailRegex, htmlScript };
