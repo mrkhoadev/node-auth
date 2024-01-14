@@ -19,7 +19,17 @@ module.exports = {
                     }),
                 password: string()
                     .min(8, 'Mật khẩu phải tối thiếu 8 ký tự')
-                    .required("Mật khẩu bắt buộc phải nhập"),
+                    .required("Mật khẩu bắt buộc phải nhập")
+                    .test("check-password", "Mật khẩu phải có ít nhất 1 ký tự đặc biệt, 1 ký tự viết hoa và 1 số!", async (value) => {
+                        if (!value.length) {
+                            return true;
+                        }
+                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                        if (passwordRegex.test(value)) {
+                            return true;
+                        }
+                        return false;
+                    }),
             });
             if (body) {
                 const saltRounds = 10;

@@ -13,29 +13,26 @@ module.exports = {
                 email: string()
                     .required("Email bắt buộc phải nhập")
                     .email("Email không đúng định dạng")
-                    .test({
-                        name: "check-email",
-                        exclusive: false,
-                        message: "Tài khoản không tồn tại",
-                        test: async (value) => {
-                            result = await User.findOne({ where: { email: value } });
-                            return result ? true : false;
+                    .test("check-email", "Tài khoản không tồn tại", async (value) => {
+                        if (!value.length) {
+                            return true;
                         }
+                        result = await User.findOne({ where: { email: value } });
+                        return result ? true : false;
                     }),
-                    // .test("check-email", "Tài khoản không tồn tại", async (value) => {
-                    //     result = await User.findOne({ where: { email: value } });
-                    //     return result ? true : false;
-                    // }),
                 password: string()
                     .min(8, 'Mật khẩu phải tối thiếu 8 ký tự')
                     .required("Mật khẩu bắt buộc phải nhập")
-                    // .test("check-password", "Mật khẩu yếu không cho đăng nhập :v", async (value) => {
-                    //     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                    //     if (passwordRegex.test(value)) {
-                    //         return true;
-                    //     }
-                    //     return false;
-                    // })
+                    .test("check-password", "Mật khẩu phải có ít nhất 1 ký tự đặc biệt, 1 ký tự viết hoa và 1 số!", async (value) => {
+                        if (!value.length) {
+                            return true;
+                        }
+                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                        if (passwordRegex.test(value)) {
+                            return true;
+                        }
+                        return false;
+                    })
             });
             if (isEmail) {
                 const isMatch = await bcrypt.compare(req.body?.password, result?.password);
