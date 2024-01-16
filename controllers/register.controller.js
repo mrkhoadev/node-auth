@@ -21,7 +21,7 @@ module.exports = {
                     .min(8, 'Mật khẩu phải tối thiếu 8 ký tự')
                     .required("Mật khẩu bắt buộc phải nhập")
                     .test("check-password", "Mật khẩu phải có ít nhất 1 ký tự đặc biệt, 1 ký tự viết hoa và 1 số!", async (value) => {
-                        if (!value.length) {
+                        if (value === "" || value.length < 8) {
                             return true;
                         }
                         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -29,6 +29,12 @@ module.exports = {
                             return true;
                         }
                         return false;
+                    }),
+                status: string().test(
+                        "check-status",
+                        "Trạng thái không hợp lệ",
+                        (value) => {
+                        return +value === 0 || +value === 1;
                     }),
             });
             if (body) {
@@ -38,6 +44,7 @@ module.exports = {
                 const newBody = {
                     ...body,
                     password: hashedPassword,
+                    status: body.status === "1"
                 }
                 const data = await User.create(newBody);
                 req.flash("msg", "Đăng ký thành công");

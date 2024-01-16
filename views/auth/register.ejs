@@ -38,6 +38,14 @@
             >
             <span class="text-danger"><%= req?.errors?.password %></span>
         </div>
+        <div class="mb-3">
+            <label for="">Trạng thái</label>
+            <select name="status" class="form-select">
+              <option value="0" selected>Chưa kích hoạt</option>
+              <option value="1">Kích hoạt</option>
+            </select>
+            <span class="text-danger"><%= req.errors.status %></span>
+          </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng ký</button>
         <div class="form-text pt-2">Bạn đã có tài khoản? <a href="/dang-nhap">Đăng nhập</a></div>
     </form>

@@ -24,7 +24,7 @@ module.exports = {
                     .min(8, 'Mật khẩu phải tối thiếu 8 ký tự')
                     .required("Mật khẩu bắt buộc phải nhập")
                     .test("check-password", "Mật khẩu phải có ít nhất 1 ký tự đặc biệt, 1 ký tự viết hoa và 1 số!", async (value) => {
-                        if (!value.length) {
+                        if (value === "" || value.length < 8) {
                             return true;
                         }
                         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -37,14 +37,17 @@ module.exports = {
             if (isEmail) {
                 const isMatch = await bcrypt.compare(req.body?.password, result?.password);
                 if (isMatch) {
-                    req.session.data = result
-                    req.flash("msg", "Đăng nhập thành công");
-                    return res.redirect("/");
+                    if (result.status) {
+                        req.session.data = result
+                        req.flash("msg", "Đăng nhập thành công");
+                        return res.redirect("/");
+                    } else {
+                        req.flash("error", "Tài khoản chưa được cấp phép!");
+                    }
                 } else {
                     req.flash("error", "Tài khoản hoặc mật khẩu không chính xác!");
                 }
             }
-            
         } catch (e) {
             return next(e);
         }
