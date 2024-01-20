@@ -1,9 +1,62 @@
 <div class="p-5">
   <h1>Trang chủ</h1>
   <h2>Chào bạn: <%= data?.name %></h2>
-  <form
-    method="post"
-  >
-    <button class="btn btn-danger">Đăng xuất</button>
-  </form>
+  <div style="display: flex; gap: 10px;">
+    <form
+      method="post"
+    >
+      <button class="btn btn-danger">Đăng xuất</button>
+    </form>
+    <a href="/doi-mat-khau" class="btn btn-primary">Đổi mật khẩu</a>
+  </div>
+  <div style="max-width: 300px; margin-left: auto;">
+    <% if (req?.msg) { %>
+      <div class="alert alert-success"  role="alert">
+        <%= req?.msg %>
+      </div>
+    <% } %>
+    <% if (req?.error) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= req?.error %>
+      </div>
+    <% } %>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Tên trình duyệt</th>
+        <th scope="col" class="text-center">Hệ điều hành thiết bị</th>
+        <th scope="col" class="text-center">Thời gian đăng nhập</th>
+        <th scope="col" class="text-center">Thời gian Đăng nhập cuối cùng</th>
+        <th scope="col" class="text-center">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (devices?.length === 0) { %>
+        <tr>
+          <td colspan="5" class="text-center" style="font-size: 20px;">Không có dữ liệu!</td>
+        </tr>
+      <% } else { %>
+        <% devices?.forEach((item, index) => { %>
+            <tr>
+              <th scope="row"><%= index + 1 %></th>
+              <td><%= item.browser_name %></td>
+              <td class="text-center"><%= item.os_name %></td>
+              <td class="text-center"><%= getTime(item.created_at) %></td>
+              <td class="text-center"><%= getTime(item.updated_at) %></td>
+              <td class="text-center">
+                <form
+                  action="/logout/<%= item?.id %>"
+                  method="post"
+                  onsubmit="return confirm('Bạn có chắc chắn?')"
+                >
+                  <button class="btn btn-danger">Đăng xuất</button>
+                </form>
+              </td>
+            </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
 </div>

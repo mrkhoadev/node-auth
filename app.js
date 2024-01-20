@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
 const session = require("express-session");
 const flash = require("connect-flash");
 const expressLayout = require("express-ejs-layouts");
@@ -12,6 +13,7 @@ const authenticationMiddleware = require("./middlewares/authentication.middlewar
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
+var changePasswordRouter = require('./routes/changePassword');
 
 var app = express();
 app.use(session({
@@ -38,6 +40,7 @@ app.use(validateMiddleware);
 app.use(authenticationMiddleware);
 app.use('/dang-nhap', loginRouter);
 app.use('/dang-ky', registerRouter);
+app.use('/doi-mat-khau', changePasswordRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
