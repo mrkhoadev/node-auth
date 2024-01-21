@@ -12,25 +12,24 @@ module.exports = async (req, res, next) => {
                     token: req.session.token
                 }
             });
-            if (!result) {
-                // Nếu không tìm thấy thiết bị với token tương ứng
+            if (result && result.status) {
+                const currentDateTime = new Date();
+                await Device.update(
+                    { updated_at: currentDateTime },
+                    {
+                        where: {
+                            id: result.id
+                        }
+                    }
+                )
+                // await await Device
+                // Nếu tìm thấy thiết bị, kiểm tra pathname
+                if (pathname === "dang-nhap" || pathname === "dang-ky") {
+                    return res.redirect('/');
+                }
+            } else {
                 delete req.session.token;
                 return res.redirect('/dang-nhap');
-            }
-            const currentTimestamp = Date.now();
-            const currentDateTimeString = new Date(currentTimestamp);
-            const test = await Device.update(
-                { updated_at: currentDateTimeString.toString() },
-                {
-                    where: {
-                        id: result.id
-                    }
-                }
-            )
-            // await await Device
-            // Nếu tìm thấy thiết bị, kiểm tra pathname
-            if (pathname === "dang-nhap" || pathname === "dang-ky") {
-                return res.redirect('/');
             }
         } catch (error) {
             return next(error);;

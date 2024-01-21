@@ -1,5 +1,4 @@
 const { User, Device } = require("../models/index");
-const { Op } = require('sequelize');
 const getTime = require("../helpers/getTime")
 
 module.exports = {
@@ -8,14 +7,7 @@ module.exports = {
             const browser_info = await Device.findAll({
                 order: [["id", "desc"]],
                 where: {
-                    [Op.and]: [
-                        { user_id: req.session?.data?.id },
-                        {
-                            [Op.not]: {
-                                token: req.session.token
-                            }
-                        }
-                    ]
+                    user_id: req.session?.data?.id
                 }
             });
             res.render("index", { data: req.session?.data, devices: browser_info, req, getTime });
@@ -25,18 +17,23 @@ module.exports = {
     },
     logout: async (req, res, next) => {
         try {
-            await Device.destroy({
-                where: { 
-                    token: req.session?.token,
-                 },
-                include: {
-                    model: User,
-                    as: "users",
-                    where: {
-                        id: req.session?.data?.id,
+            await Device.update(
+                {
+                    status: false,
+                },
+                {
+                    where: { 
+                        token: req.session?.token,
+                    },
+                    include: {
+                        model: User,
+                        as: "users",
+                        where: {
+                            id: req.session?.data?.id,
+                        }
                     }
                 }
-            });
+            );
             delete req.session?.data;
             delete req.session?.token;
             
@@ -49,11 +46,16 @@ module.exports = {
     handleLogoutDevice: async (req, res, next) => {
         const { id } = req.params;
         try {
-            const result = await Device.destroy({
-                where: { 
-                    id: +id,
+            const result = await Device.update(
+                {
+                    status: false,
                 },
-            });
+                {
+                    where: { 
+                        id: +id,
+                    },
+                }
+            );
             if (!result) {
                 throw new Error("Không tìm thấy thiết bị");
             }

@@ -9,30 +9,11 @@ module.exports = {
         res.render("auth/login", { req });
     },
     handleLogin: async (req, res, next) => {
-        let result;
         try {
             const isValidate = await req.validate(req.body, {
                 email: string()
                     .required("Email bắt buộc phải nhập")
-                    .email("Email không đúng định dạng")
-                    .test("check-email", "Tài khoản không tồn tại", async (value) => {
-                        if (!value.length) {
-                            return true;
-                        }
-                        const body = {
-                            where: { email: value },
-                        }
-                        if (req.session.token) {
-                            body.include = {
-                                model: Device,
-                                as: "devices",
-                                where: { token: req.session.token }
-                            }
-                        }
-                        result = await User.findOne(body);
-                        if (!req.session.token) result.device = []
-                        return result ? true : false;
-                    }),
+                    .email("Email không đúng định dạng"),
                 password: string()
                     .min(8, 'Mật khẩu phải tối thiếu 8 ký tự')
                     .required("Mật khẩu bắt buộc phải nhập")
@@ -48,6 +29,13 @@ module.exports = {
                     })
             });
             if (isValidate) {
+                const result = await User.findOne({
+                    where: { email: isValidate.email }
+                });
+                if (!result) {
+                    req.flash("error", "Tài khoản không tồn tại!");
+                    return res.redirect("/dang-nhap");
+                }
                 const isMatch = await bcrypt.compare(req.body?.password, result?.password);
                 if (isMatch) {
                     if (result.status) {
@@ -73,6 +61,7 @@ module.exports = {
                 } else {
                     req.flash("error", "Tài khoản hoặc mật khẩu không chính xác!");
                 }
+                req.flash("old", { email: req.body.email });
             }
         } catch (e) {
             return next(e);

@@ -69,7 +69,10 @@ module.exports = {
                     }
                 )
                 if (result) {
-                    await Device.destroy({
+                    await Device.update(
+                        {
+                            status: false
+                        },{
                         where: { 
                             [Op.and]: [
                                 { user_id: result[0] },

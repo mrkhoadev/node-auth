@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
     browser_name: {
       type: DataTypes.STRING,
       defaultValue: null,
@@ -55,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Device',
     tableName: "devices",
+    timestamps: false,
     createdAt: "created_at",
     updatedAt: "updated_at",
   });

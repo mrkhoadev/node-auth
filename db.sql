@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS devices (
 	id SERIAL PRIMARY KEY NOT NULL,
 	token TEXT NOT NULL,
+	status BOOLEAN DEFAULT true,
 	browser_name VARCHAR(255),
 	browser_version VARCHAR(255),
 	os_name VARCHAR(255),

@@ -41,18 +41,22 @@
         <% devices?.forEach((item, index) => { %>
             <tr>
               <th scope="row"><%= index + 1 %></th>
-              <td><%= item.browser_name %></td>
+              <td><%= item.browser_name %> <%= item.token === req?.session?.token ? "( Hiện tại )" : "" %></td>
               <td class="text-center"><%= item.os_name %></td>
               <td class="text-center"><%= getTime(item.created_at) %></td>
               <td class="text-center"><%= getTime(item.updated_at) %></td>
               <td class="text-center">
-                <form
-                  action="/logout/<%= item?.id %>"
-                  method="post"
-                  onsubmit="return confirm('Bạn có chắc chắn?')"
-                >
-                  <button class="btn btn-danger">Đăng xuất</button>
-                </form>
+                <% if (item.status) { %>
+                  <form
+                    action="/logout/<%= item?.id %>"
+                    method="post"
+                    onsubmit="return confirm('Bạn có chắc chắn?')"
+                  >
+                    <button class="btn btn-danger">Đăng xuất</button>
+                  </form>
+                <% } else { %>
+                  <button type="button" class="btn btn-success">Đã đăng xuất</button>
+                <% } %>
               </td>
             </tr>
         <% }) %>
