@@ -29,9 +29,19 @@ module.exports = {
                     })
             });
             if (isValidate) {
-                const result = await User.findOne({
+                const body = {
                     where: { email: isValidate.email }
-                });
+                };
+                if (req.session.token) {
+                    body.include = {
+                        model: Device,
+                        as: "devices",
+                        where: {
+                            token: req.session.token
+                        }
+                    }
+                }
+                const result = await User.findOne(body);
                 if (!result) {
                     req.flash("error", "Tài khoản không tồn tại!");
                     return res.redirect("/dang-nhap");
@@ -39,7 +49,18 @@ module.exports = {
                 const isMatch = await bcrypt.compare(req.body?.password, result?.password);
                 if (isMatch) {
                     if (result.status) {
-                        if (!req.session.token) {
+                        if (req.session.token && Array.isArray(result?.devices) && result.devices[0]?.token === req.session.token) {
+                            await Device.update(
+                                {
+                                    status: true,
+                                },
+                                {
+                                    where: {
+                                        token: req.session.token,
+                                    }
+                                }
+                            )
+                        } else {
                             const { browser, os } = parser(req.headers['user-agent']);
                             const hashedData = md5(new Date().getTime() + Math.random());
                             req.session.token = hashedData;
@@ -51,7 +72,7 @@ module.exports = {
                                 os_name: os.name,
                                 os_version: os.version,
                                 user_id: result.id,
-                             })
+                            })
                         }
                         req.session.data = result;
                         req.flash("msg", "Đăng nhập thành công");

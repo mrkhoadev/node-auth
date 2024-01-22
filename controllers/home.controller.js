@@ -35,7 +35,6 @@ module.exports = {
                 }
             );
             delete req.session?.data;
-            delete req.session?.token;
             
             req.flash("msg", "Đăng xuất thành công!")
             res.redirect("/dang-nhap");
